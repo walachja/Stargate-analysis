@@ -4,3 +4,4 @@ Analysis of transcripts of my favorite TV show Stargate: SG-1. The script web sc
 <p align="center">
   <img src="https://github.com/walachja/Stargate-analysis/blob/master/Number_of_words.png" width="700" title="Number of words of main characters by season.">
 </p>
+
