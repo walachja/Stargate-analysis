@@ -3,3 +3,7 @@ Analysis of transcripts of my favorite TV show Stargate: SG-1. The script will w
 
 ![alt text](https://github.com/walachja/Stargate-analysis/blob/master/Number_of_words.png)
 
+<p align="center">
+  <img src="https://github.com/walachja/Stargate-analysis/blob/master/Number_of_words.png" width="350" title="hover text">
+  <img src="https://github.com/walachja/Stargate-analysis/blob/master/Number_of_words.png" width="350" alt="accessibility text">
+</p>
