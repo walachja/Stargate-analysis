@@ -36,7 +36,7 @@ s = ['O\'NEILL',
 
 # Result dataframe alocation
 data = pd.DataFrame(np.nan, index=range(0,22*len(season_number)), columns=s)
-
+data_per_apper  = pd.DataFrame(np.nan, index=range(0,22*len(season_number)), columns=s)
 # Pozition in df
 poz=0
 
@@ -116,35 +116,53 @@ for season in range(10):
             
             # Total number of words
             k=0
+            #Number of apperances
+            apper = 0
             for j in index_list:
                 # Rows between names
                 lines = result[(j+1):[i for i in velke if i > j][0]]
                 # What she/he reallz said
-                sais = [i for i in lines if ('<' not in i) & ('[' not in i)]
+                sais = [i for i in lines if ('<' not in i) & ('[' not in i) & ('(' not in i)]
             
                 # Sum
                 for i in range(len(sais)):
-                    k+=len(sais[i].split(' '))
+                    sais2 = sais[i].split(' ')                
+                    
+                    for kkk in sais2:
+                        if len(kkk)>0:
+                            k+=1
+                    apper += 1 
             print(k)
             data.loc[poz,sub] = k
             data.loc[poz,s[-2]] = season_number[season]
             data.loc[poz,s[-1]] = episode_number
+        
+            if apper !=0:
+                num=k/apper
+            else: num=0
+            
+            data_per_apper.loc[poz,sub] = num
+            data_per_apper.loc[poz,s[-2]] = season_number[season]
+            data_per_apper.loc[poz,s[-1]] = episode_number
+           
         
         episode_number += 1
         poz += 1
 
 # Remove nan rows if any
 data=data.loc[data.isnull().sum(axis=1) != len(s),:]
+data_per_apper=data_per_apper.loc[data_per_apper.isnull().sum(axis=1) != len(s),:]
 
 # Save results as csv
 data.to_csv('Stargate.csv')
+data_per_apper.to_csv('Stargate_per_apper.csv')
 
 
 # Graph - median number of rows per season
 import matplotlib.pyplot as plt
 
 
-df_grouped = data.groupby('Season',as_index=False).median().drop('Episode',axis=1)
+df_grouped = data.groupby('Season',as_index=False).mean().drop('Episode',axis=1)
  
 plt.plot( season_number, 'O\'NEILL', data=df_grouped,marker ='o')
 plt.plot( season_number, 'DANIEL', data=df_grouped,marker ='o')
@@ -164,4 +182,31 @@ plt.xlabel('Season')
 
 plt.xticks(season_number)
 
-plt.savefig('Number_of_words.png', bbox_extra_artists=(lgd,), bbox_inches='tight', dpi=199)
+plt.savefig('Number_of_words.png', bbox_extra_artists=(lgd,), bbox_inches='tight', dpi=150)
+plt.clf()
+
+# Graph - median number per apperance
+import matplotlib.pyplot as plt
+
+
+df_grouped = data_per_apper.groupby('Season',as_index=False).mean().drop('Episode',axis=1)
+ 
+plt.plot( season_number, 'O\'NEILL', data=df_grouped,marker ='o')
+plt.plot( season_number, 'DANIEL', data=df_grouped,marker ='o')
+plt.plot( season_number, 'CARTER', data=df_grouped,marker ='o')
+plt.plot( season_number, 'TEAL\'C', data=df_grouped,marker ='o')
+#plt.plot( season_number, 'HAMMOND', data=df_grouped)
+#plt.plot( season_number, 'JONAS', data=df_grouped)
+#plt.plot( season_number, 'MITCHELL', data=df_grouped)
+#plt.plot( season_number, 'LANDRY', data=df_grouped)
+#plt.plot( season_number, 'BRA\'TAC', data=df_grouped)
+
+lgd=plt.legend(loc='upper right', bbox_to_anchor=(1.27,1))
+
+plt.title('Stargate: Number of words per apperance')
+plt.ylabel('Number of words per apperance')
+plt.xlabel('Season')
+
+plt.xticks(season_number)
+
+plt.savefig('Number_of_words_per_apperance.png', bbox_extra_artists=(lgd,), bbox_inches='tight', dpi=150)
